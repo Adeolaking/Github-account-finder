@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>>Github profile Previewer</title>
+	<link rel="stylesheet" href="style.css">
+	<style>
+	
+	</style>
+</head>
+<body>
+	<div class="container">
+		<form id="userForm">
+			<label>Github Username:</label>
+			<div class="form-group input">
+				<input  class="search-input" type="text" id="username" placeholder="Github Username:" class="form-control">
+				<input class="submit" type="submit" onclick="getProfile()" value="search">
+			</div>
+		</form>
+		<div id="profile"></div>		
+	</div>
+	<script>
+		function getProfile(e){
+			e.preventDefault();
+			console.log('Fetching...');
+
+			var username = document.getElementById('username').value;
+			if(!username || username == ''){
+				username = 'Adeolaking';
+			}
+
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function(){
+				if(xhttp.readyState == 4 && xhttp.status == 200){
+					var user = JSON.parse(xhttp.responseText);
+					document.getElementById('profile').innerHTML = `<div class="main-cont">
+			<div class="card-cont">
+				<div class="col">
+					<div class="image-cont">
+					<img src="${user.avatar_url}" />
+				</div>
+				</div>
+				
+				<div class="text">
+					<div class="btn"></div>
+					<h1 class="name">${user.name}</h1>
+					<h2 class="sub">@${user.login}</h2>
+					<ul class="status">
+						<li><span class="main">${user.followers}</span><span class="sub">Follower</span></li>
+						<li><span class="main">${user.following}</span><span class="sub">Following</span></li>
+						<li><span class="main">${user.public_repos}</span><span class="sub">Repos</span></li>
+					</ul>
+					<h1>About</h1>
+					<p>${user.bio}</p>
+				</div>
+			</div>
+		</div>`;
+				}
+			}
+			xhttp.open('GET', 'https://api.github.com/users/'+username, true);
+			xhttp.send();
+		}
+
+		document.getElementById('userForm').addEventListener('submit', getProfile, false);
+	</script>
+</body>
+</html>
